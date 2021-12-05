@@ -36,10 +36,17 @@ void setup(){
     radio.startListening  ();                                                          
 }
 
-void blink_diod(){
+void blink_diod_server(){
     delay(150);
     digitalWrite(3, HIGH);
     delay(150);
+    digitalWrite(3, LOW);
+}
+
+void blink_diod_user(){
+    delay(50);
+    digitalWrite(3, HIGH);
+    delay(50);
     digitalWrite(3, LOW);
 }
 
@@ -53,7 +60,7 @@ void remote_signal(){
 
 void data_all_control(){
     while (s1==0 || s2==0){
-        blink_diod();
+        blink_diod_server();
         //Serial.print("s1="+String(s1));
         //Serial.println("s2="+String(s2));
         if(radio.available(&pipe)){                                
@@ -125,6 +132,7 @@ void set_speed(int speed){
 
 void user_mode(){
     while (remote_data[0]==1){
+        blink_diod_user();
         //Serial.print("1");
         if(radio.available(&pipe)){                                
             radio.read(&data, sizeof(data));                  
@@ -158,9 +166,10 @@ void user_mode(){
                     server_data[1]=5;
                 }
                 delay(500);
-                remote_signal();
+                
             }
         }
+        remote_signal();
     }
     set_speed(0);
     server_data[1]=0;
