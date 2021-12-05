@@ -5,7 +5,7 @@
 RF24 radio(9,10);                               
 int       data[3],remote_data[3],server_data[3];
 uint8_t   pipe;  
-int in0=3,in1=4,in2=5,in3=6,in4=7,in5=8,s1=0,s2=0,onv,offv,ksv,sv1,sv2,sv3,sv4;
+int in0=3,in1=8,in2=7,in3=6,in4=5,in5=4,s1=0,s2=0,onv,offv,ksv,sv1,sv2,sv3,sv4;
 
 void setup(){
     server_data[0]=0;
@@ -14,13 +14,12 @@ void setup(){
     remote_data[0]=0;
     remote_data[1]=0;
     remote_data[2]=0;
-    pinMode(in0, OUTPUT);
+    pinMode(3, OUTPUT);
     pinMode(in1, OUTPUT);
     pinMode(in2, OUTPUT);
     pinMode(in3, OUTPUT);
     pinMode(in4, OUTPUT);
     pinMode(in5, OUTPUT);
-    digitalWrite(in0, HIGH);
     digitalWrite(in1, LOW);
     digitalWrite(in2, LOW);
     digitalWrite(in3, LOW);
@@ -37,6 +36,13 @@ void setup(){
     radio.startListening  ();                                                          
 }
 
+void blink_diod(){
+    delay(150);
+    digitalWrite(3, HIGH);
+    delay(150);
+    digitalWrite(3, LOW);
+}
+
 void remote_signal(){
     radio.stopListening();
     radio.openWritingPipe(111156789);
@@ -47,6 +53,7 @@ void remote_signal(){
 
 void data_all_control(){
     while (s1==0 || s2==0){
+        blink_diod();
         //Serial.print("s1="+String(s1));
         //Serial.println("s2="+String(s2));
         if(radio.available(&pipe)){                                
@@ -148,7 +155,7 @@ void user_mode(){
                 }
                 if (remote_data[1]==5){
                     set_speed(5);
-                    server_data[1]=1;
+                    server_data[1]=5;
                 }
                 delay(500);
                 remote_signal();
